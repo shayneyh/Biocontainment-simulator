@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+	<head> 
+		<style>
+			td {text-align: center;}
+		</style>
+		<script src = "CLModel.js"></script>
+		<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
+		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	</head>
+	<body onload = "main();">
+		<h1><span>
+			Mathematical Modelling of CRISPR-Cas Genetic Safeguard System and its Efficacy on Biocontainment of Genetically Engineered Organisms</span></h1>
+
+		<h2><span>
+			Introduction</span></h2>
+
+		<p>
+			Biocontainment of genetically modified organisms has been a major concern in the field of synthetic biology [1][2]. Conventional methods such as kill switch or engineered auxotrophy can be ineffective as a result of mutations and various incidents of engineered bacteria escaping biocontainment systems have been reported [3][4][5]. The CRISPR-cas plasmid –loss system is proposed as an alternative to improve efficacy of current genetic safeguard strategies. In short, activation of CRISPR-cas system destroys targeted plasmids that have been transformed into bacteria. As a result, these bacteria do not contain any foreign DNA and are genetically identical to wild type bacteria. Given that this mechanism is not 100% efficient, bacteria that fail to destroy their own plasmids will still evolve as mutants. However, growth of mutant species is greatly prohibited by presence of wild type population through competition for resources.  Therefore, the CRISPR-Cas system can potentially become a more effective biocontainment method compared to other genetic safeguards where mutants that survive through the “kill switch” can completely occupy a colony [6].<br><br>
+The system also takes advantage of the difference in amount of nutrients required for growth between wild type and mutant bacteria. Mutant species consumes extra nutrients to produce plasmids and associated proteins, which results in lower growth rate compared to wild type species and increased susceptibility to lack of resources [7]. This intrinsic advantage can further suppress any subsequent mutations that evolve from the plasmid carrying mutants and a successful mutation would require a much higher selective advantage to out-compete the wild type bacteria.<br><br>
+While CRISPR-Cas system has the ability to prevent mutants from dominating over wild type species, it does not guarantee complete elimination of mutants from the environment. The bottleneck effect, an event where the population in a colony is significantly reduced in a very short period of time, is known to greatly decrease the fixation probability of mutant species due to more prominent genetic drift effect [8]. An example would be cell passaging where only a small population is drawn to a new flask with sufficient nutrients [9]. In the context of an external environment, bottleneck could refer to periodic use of drugs as an attempt to remove traces of genetically engineered materials or organisms.<br><br>
+In this study we have developed a mathematical model to simulate the population dynamics in a post CRISPR-Cas activation environment where MG1655 <i>E.coli</i> that have successfully destroyed its own plasmids (wild type) compete with plasmid-carrying MG1655 <i>E.coli</i> that have failed to destroy its own plasmids. The model will be used to evaluate the effect of various physiological and environmental parameters on extinction probability of mutants. We hypothesize that: 1) Upon activation of CRISPR-Cas mechanism, the fraction of plasmid carrying E. Coli in the colony will decrease over time or remain the same in the worst case scenario, and 2) Through periodic bottlenecks, the extinction time and probability of plasmid carrying E. Coli will both decrease significantly.<br><br>
+It is important to note that mutations are inevitable under any genetic safeguards. Therefore, the efficacy of the CRISPR-Cas system is evaluated by its ability to eliminate any mutants that carry genetically engineered plasmids as they pose greater danger to the external environment than organisms that evolve from natural mutations. The mutants will now only refer to plasmid-carrying <i>E.coli</i>.</p>
+
+<p>
+The following parameters are varied to evaluate their effect on extinction time and probability:
+1. Interspecific inhibition constant, α and β
+2. CRISPR efficiency
+3. Dilution factor that determines the population size after a bottleneck
+</p>
+
+
+<h2><span>
+	Mathematical Model</span></h2>
+
+
+<h4><span>
+	Lotka-Volterra (L-V) model</span></h4>
+<p>
+The L-V model is widely used for studying interspecific competition in a resource limited environment and is used as the basis to describe the growth profile of each species in this model [10]. The growth rates of wild type and mutants, x and y, are governed by two differential equations:
+
+		$$\frac{dx}{dt} = r_x x (1 - \frac{x + \alpha y}{K_x})$$
+		$$\frac{dy}{dt} = r_y y (1 - \frac{y + \beta x}{K_y})$$
+</p>
+
+<p>
+$r$ represents the growth rate constant for each species and α and β are interspecific competing factor due to presence of the other species. $K$ is the carrying capacity of the environment in absence of competition and is mainly influenced by the amount of available resources in the context of a bacterial culture. The first term in the bracket represents intrinsic growth rate and is corrected by the second term to account for interspecific competition and environmental constraints. The fate of each species predicted by the model can be categorized into 4 scenarios:
+</p>
+
+<p>
+<b>
+Case I: <br>
+$K_1 \lt \frac{K_2}{\beta_{21}}$ and $K_2 \gt \frac{K_1}{\beta_{12}}$<br>
+</b>
+        Species 2 outcompetes species 1.<br><br>
+<b>
+Case II: <br>
+$K_1 \gt \frac{K_2}{\beta_{21}}$ and $K_2 \lt \frac{K_1}{\beta_{12}}$<br>
+</b>
+  
+        Species 1 outcompetes species 2.<br><br>
+
+<b>
+Case III: <br>
+$K_1 \lt \frac{K_2}{\beta_{21}}$ and $K_2 \gt \frac{K_1}{\beta_{12}}$<br>
+</b>
+        Species 1 can outcompete species 2, but species 2 can also outcompete species 1.<br>
+		The outcome depends on the initial condition.<br><br>
+
+<b>
+Case IV: <br>
+$K_1 \lt \frac{K_2}{\beta_{21}}$ and $K_2 \lt \frac{K_1}{\beta_{12}}$<br>
+</b>
+        Species 1 and 2 coexist<br><br>
+</p>
+
+<h4><span>
+Stochastic approach</h4></span>
+<p>
+In the deterministic case above, the plasmid-loss system will only work in Case II where species 1 is wild-type bacteria and species 2 is mutant. Given that wild type and mutant bacteria have the same carrying capacity, wild-type bacteria will need a selective advantage to out-compete the mutant. In contrast, in the stochastic model was implemented to account for variability in growth rate within each species, uneven distribution of resources, as well as unpredicted events such as mutations. Given the uncertainty of the stochastic model, we hypothesize that when the wild type to mutant population ratio is very extreme (~$10^8$) and the selective advantage of mutant is not significantly higher than wild type, there is a small possibility that the mutant population will disappear due to genetic drift. This stochastic process is carried out by calculating the growth rate of each species at each time step and generating the net growth between each time step using Poisson distribution. 
+</p>
+
+<h4><span>
+Bottleneck effect</h4></span>
+
+<p>
+During a bottleneck event, the population is rapidly reduced to a small population by the dilution factor. The population of each species that survive the bottleneck is randomly selected base on the probability that is equal to the population ratio right before the bottleneck. After the bottleneck, both species were repopulated according to the L-V model until the total population reaches the carrying capacity again. This process is repeated until one of the species is extinct. A mutation is considered successful if its population survives for over 100 bottlenecks.
+</p>
+
+<h4><span>
+Assumptions</h4></span>
+
+<p>
+The population of plasmid containing E. Coli is assumed to be at full environmental capacity prior to activation of CRISPR-cas system. The efficiency of this mechanism will determine the ratio of wild type to mutant population, which will be used as the initial populations for the model. The only mutation of interest refers to bacteria that fail to cleave their own plasmids when safeguard system is activated. All other mutations after the activation are assumed to have insufficient selective advantages to survive permanently. Bacteria that have been reverted back to wild type are assumed to be identical to wild type.
+</p>
+
+
+<h2><span>
+
+Parameters
+
+</h2></span>
+
+<p>
+The values for parameters used in the model is summarized in Table 1. 
+</p>
+TABLE 1
+<table style="width:100%">
+  <tr>
+  	<th></th>
+  	<th>Growth rate constant, r (# cell/doubling time</th>
+  	<th>Carrying capacity, K (# cell/µL)</th>
+  	<th>Interspecific competing factor</th>
+  	<th>Plasmid copy number</th>
+  	<th>Dilution factor</th>
+  </tr>
+  <tr>
+  	<td>Wild type</td>
+  	<td>2</td>
+  	<td>3.5*10^8</td>
+  	<td>0.67~1.5</td>
+  	<td>0</td>
+  	<td>0.001</td>
+  </tr>	
+  <tr>
+  	<td>Mutant</td>
+  	<td>1.8776</td>
+  	<td>3.5*10^8</td>
+  	<td>1.5~0.67</td>
+  	<td>20</td>
+  	<td>~0.5</td>
+  </tr>
+</table>
+
+<p>
+<b>Growth rate constant:</b><br>
+Growth experiments were performed using MG1655 E. Coli strain by measuring OD and plate bateria every hour for 8 hours. The growth curve was determined by fitting data to the logistic growth equation. The wild type MG1655 growth rate constant was extracted from the exponential phase of the growth curve. The growth rate constant of plasmid carrying mutants was assumed to decrease as a function of total foreign DNA present in each bacterium according to Akeno et ali [11] and is governed by the equation:<br>
+
+$$r_{mut} = r_{wt} + log (1 - 7.2*10^5*plasmid\ size*copy\ number)$$
+<br>
+where $r_{wt}$ is the growth rate constant of wild type MG1655 bacteria and plasmid size is the size of each plasmid in kilobase and copy number is the approximate number of plasmid in each bacterium.
+</p>
+
+<p>
+<b>Carrying capacity:</b><br>
+The carrying capacity of wild type MG1655 bacteria was set to the population at the end of the stationary phase of the growth curve. In the coupled logistic model, carrying capacity is expressed as a density and the unit in our model is # bacteria/µL. The values are assumed to be the same for both wild type and mutant bacteria [12].
+</p>
+
+<p>
+<b>Interspecific competing factor:</b><br>
+The competing factors are equal to 1 when there are no selective advantage between wild type and mutant species. In other words, the presence of the other species has the same effect as its own species. The interspecific competition constant for both wild type and mutant bacteria are varied in the model to evaluate their effect on extinction probability. However, the product of the corresponding competing factor in each scenario is kept at 1 to ensure that the effect is solely due to their ratio.
+</p>
+
+<p>
+<b>Plasmid copy number:</b><br>
+Plasmid copy number varies depends on the origin of replication of the plasmid. The plasmid copy number used in the model was in the low-copy-number range to increase CRISPR efficiency.
+</p>
+
+<p>
+<b>Dilution factor:</b><br>
+Lab condition: assumed to be 1%, which represents the percentage of cells aliquoted to a new flask.
+Environmental condition: varied from 0.1% to 5%, which represents the efficacy of chemical used to kill bacteria.
+</p>
+
+
+<h2><span>
+
+Results and discussions:
+
+</span></h2>
+
+<img src="./source/beta1-popWT_Mut_vs_time.png"><br><br>
+<img src="./source/beta1-popWTfraction.png"><br>
+
+FIG1 is beta1-popWT_Mut_vs_time
+ FIG2 is beta1-popWTfraction
+
+<p>
+<b>Figure 1</b> Wild-Type (WT) and Mutant (Mut) population size as a function of time. The figure shows how WT population increases and Mut population decreases after each bottleneck effect. The fluctuation of both populations due to the bottlenecks. 
+</p>
+
+<p>
+<b>Figure 2</b> Percentage of Wild Type (WT) population as a function of time. The figure shows that the percentage of WT population increases after each bottleneck effect. 
+</p>
+
+
+<p>
+From both figures, it can be observed that the population of wild type and mutant E. Coli are fairly constant before bottleneck effect when the total population is near the carrying capacity.It suggests time before first bottleneck and between bottlenecks have minimal contribution to extinction. Instead, it is mainly governed by the number of bottlenecks. After each bottleneck, the wild type population grows steadily and the mutants population decreases until it reaches extinction. This phenomenon is attributed to the difference in growth rate, which is more evident when the total population is small (right after each bottleneck). The results demonstrate the ability of periodic bottlenecks in creating genetic drift and driving mutants towards extinction, which is consistent with the results obtained by Wahl et al [11]. 
+</p>
+
+<p>
+While other safeguard method requires frequent use of chemicals to kill bacteria and eliminates the chance of mutants overtaking the colony, We demonstrated that the Plasmid Loss System ensures that mutants are under control in the presence of large wild type populations and allows for longer period of time between each usage. So, it is safer than many existing safeguards. Since the efficiency of our safeguard system depends on the number of times when chemicals are applied to create bottleneck effect, it could achieve very high efficiency without modification in the method.
+</p>
+
+<img src="./source/Fig 3 extinction time vs alpha.png"><br><br>
+<img src="./source/Figure 4 Extinction time vs efficiency.png"><br>
+
+<h4><span>
+Effect of α and β on extinction time
+</h4></span>
+
+<p>
+Figure 3 shows the time required for one species to reach extinction within a range of α and β values. The blue line indicates the time when the first bottleneck is introduced. For α smaller than 0.8 or greater than 1.3, the wild type and mutants are eliminated, respectively, by the other species before bottlenecks are introduced. Both species survives over 100 bottlenecks when α is between 1.1 and 1.2. Note that if two species are identical, the case where both species survives should occur when both α and β are approximately equal to 1. The shift in α value is attributed to the higher growth rate of wild type population, allowing them to out-compete mutants at a lower fitness. This also explains the larger area under the curve for wild type population, which reflects their ability to survive for a longer period of time under adversity. The result has demonstrated the advantage of CRISPR-Cas safeguard where mutants with a selective advantage of 0.1 over wild type could still be out-competed when the difference in growth rate only differs by 6%.
+</p>
+
+
+<h4><span>
+Effect of CRISPR efficiency and dilution factor
+</h4></span>
+
+<p>
+The wild type population always survives within the tested range of efficiency and dilution factors. Even with efficiency as low as 0.1, higher growth rate results in quick repopulation of wild type after each bottleneck. For efficiency under 90%, the threshold for dilution factor that can cause extinction of mutants is between 0.1 and 0.01. For efficiency over 90%, elimination of mutants can occur with greater dilution factors. Dilution ratio of 1.35 is reported to minimize loss of beneficial mutations and is independent of growth rate and population sizes [13]. However, our result suggested that smaller dilution factor leads to higher extinction probability of mutants, reflecting the fact that mutants are more susceptible to genetic drift when its growth rates is lower. When dilution factor is at 0.5, the mutant population is too large such that the difference in growth rate of are not sufficient to increase population ratio and drive mutants to extinction. However, dilution factors for cell passaging or drug efficiencies are usually much smaller.
+</p>
+
+<p>
+According to the National Institutes of Health, the recommended limit of engineered microbe survival or engineered DNA transmission (concentration of mutant) is 1 in 10e8 cells [14]. Since carrying capacity used in our model is in the same order of magnitude (3.5e7/µl), the extinction time is a reasonable indication of the time required to reach below the threshold. While not all safeguard system can achieve this efficiency [14], our result showed that CRISPR can effectively meet the requirement within 25 bottlenecks when efficiency is high and dilution factor is small (data not shown).
+</p>
+
+
+<h2><span>
+
+Conclusion
+
+</h2></span>
+
+<p>
+The mathematical model served as a preliminary evaluation of CRISPR-Cas plasmid loss safeguard system. The simulation demonstrated that in the post CRISPR-Cas activation environment, the interspecific competing factor,  α and β, had profound effect on extinction of one species. However, due to the difference in growth rate between wild type and mutant species, plasmid-carrying mutants were driven to extinction even in cases where they have a slight fitness advantage over wild type bacteria. In situations where α and β are close to 1, our data suggested that bottleneck can accelerate the process of eliminating species with small populations, which is consistent with the literature. Finally, we found a positive correlation between dilution factor and extinction time while CRISPR efficiency is a threshold based parameter. While there are several assumptions in the model, our results have demonstrated that CRISPR-Cas system is a viable concept and has the potential to become a better alternative to existing biocontainment strategies.
+</p>
+
+
+<h2><span>
+
+Future Work
+
+</h2></span>
+
+<p>
+In this study we have mainly focused on parameters that we believe have the most significant impact on extinction time and probability. However, there are several other intrinsic and extrinsic parameters that are worth investigating, including plasmid size, plasmid copy number, and growth media used. It will also be interesting to introduce mutations with a range of selective advantages and evaluate the ability of wild type to eliminate the mutants. By incorporating these factors, the model will become more realistic and can be used to develop a protocol that optimize the biocontainment efficacy of CRISPR-Cas plasmid loss safeguard system.
+</p>
+
+
+<h3>
+References:
+</h3>
+
+[1] The Promise and Perils of Synthetic Biology http://www.grid.unep.ch/FP2011/step1/pdf/028_syntheticBiology_references.pdf/028_Tucker_2006.pdf<br>
+ 
+[2] <a href="http://online.liebertpub.com/doi/pdf/10.1089/ind.2014.1515">Engineering Biology to Address Global Problems: Synthetic Biology Markets, Needs, and Applications<br>
+</a><br>
+
+[3] <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3554958/">Preparing synthetic biology for the world<br>
+</a><br>
+
+[4] <a href="http://trace.tennessee.edu/utk_graddiss/1102/">Developing biocontainment strategies to suppress transgene escape via pollen dispersal from transgenic plants <br></a><br>
+ 
+[5] <a href="http://www.nature.com/nbt/journal/v21/n7/full/nbt840.html">Biological containment of genetically modifiedLactococcus lactis for intestinal delivery of human interleukin 10. <br></a><br>
+ 
+[6]<a href="http://mic.sgmjournals.org/content/159/Pt_7/1221.full#ref-73"> Building-in biosafety for synthetic biology<br></a><br>
+
+[7] <a href="http://www.microbialcellfactories.com/content/13/1/49">A reduced genome decreases the host carrying capacity for foreign DNA<br></a><br>
+
+[8]<a href="http://immune.math.yorku.ca/jmheffer/sites/default/files/GenDrift.pdf">The effects of genetic drift in experimental evolution<br></a><br>
+
+[9]<a href="http://www.genetics.org/content/162/2/961.full.pdf+html">Evaluating the Impact of Population Bottlenecks in Experimental Evolution<br></a><br>
+
+[10] <a href="http://journals.cambridge.org/download.php?file=%2FANZ%2FANZ24_02%2FS0334270000003659a.pdf&code=a408c66e8ccbd0f7535dff80e4f96db5">Exchange of equilibria in two species Lotka-Volterra competition models
+<br></a><br>
+
+[11] <a href="http://www.microbialcellfactories.com/content/13/1/49">A reduced genome decreases the host carrying capacity for foreign DNA<br></a>
+
+[12] <a href="http://www.uoguelph.ca/~salex/Smith%20and%20Bidochka%20CanJMicr%2044%20351-355.pdf">Bacterial fitness and plasmid loss: the importance of culture conditions and plasmid size <br></a>
+
+[13] <a href="http://www.genetics.org/content/162/2/961.full.pdf+html">Evaluating the Impact of Population Bottlenecks in Experimental Evolution<br><br></a>
+
+[14] <a href="http://openi.nlm.nih.gov/detailedresult.php?img=3554958_fmicb-04-00005-g0002&req=4">Preparing synthetic biology for the world<br><br></a>
+
+		<div style="position: relative;">
+ 			<canvas id="WT" width="600" height="400" style="position: absolute; "></canvas>
+ 			<canvas id="MUT" width="600" height="400"></canvas>
+		</div>
+		<p id="result"></p>
+		<div class="first container-wrapper">
+			<div class="container">	
+				<div class="lorem" style="width:600px; margin:0 auto;">
+
+				</div>
+				
+				<div class="lorem" style="width:600px; margin:0 auto;">
+
+				</div>
+				
+				<div class="lorem" style="width:600px; margin:0 auto;">
+
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>
+
+
+

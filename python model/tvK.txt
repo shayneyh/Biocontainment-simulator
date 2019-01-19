@@ -1,0 +1,2 @@
+#extinction time versus K in the symmetric case, case 3, with a1=a2=0.1
+[2, [1.1145072507784395, 1.1508657566192952]]

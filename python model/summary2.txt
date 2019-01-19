@@ -1,0 +1,5 @@
+Parameters:r1 = 1.0 r2 = 0.1 k1 = 100000.0 k2 = 100000.0 a1 = 1.0 a2 = 1.0 p1 = 99000.0 p2 = 1000.0
+#average extinction time
+#extinction probability
+#lived
+none died
